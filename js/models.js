@@ -58,7 +58,7 @@
   KS.lessonStatus = function (key) { const L = KS.obj("lessons")[key]; return !L ? "neu" : L.done ? "fertig" : (L.pos || 0) > 0 ? "begonnen" : "neu"; };
   KS.lessonTile = function (n, l, locked) {
     const st = KS.lessonStatus(l.key);
-    return '<button type="button" class="ltile ' + st + (locked ? " locked" : "") + '" ' + (locked ? 'data-go="kaufen"' : 'data-lesson="' + n + '" data-mode="' + l.mode + '" data-key="' + l.key + '"') + '><span class="ltile-kind">' + l.kind + "</span><b>" + esc(l.title) + '</b><span class="ltile-sub">' + esc(l.sub || "") + '</span><span class="ltile-foot"><span class="num">' + l.cards + " Karten</span>" + (locked ? '<span class="chip">Gesperrt</span>' : st === "fertig" ? '<span class="chip ok">Abgeschlossen</span>' : st === "begonnen" ? '<span class="chip glow">Begonnen</span>' : '<span class="chip accent">Neu</span>') + "</span></button>";
+    return '<button type="button" class="ltile ' + st + (locked ? " locked" : "") + '" ' + (locked ? 'data-go="los"' : 'data-lesson="' + n + '" data-mode="' + l.mode + '" data-key="' + l.key + '"') + '><span class="ltile-kind">' + l.kind + "</span><b>" + esc(l.title) + '</b><span class="ltile-sub">' + esc(l.sub || "") + '</span><span class="ltile-foot"><span class="num">' + l.cards + " Karten</span>" + (locked ? '<span class="chip">Gesperrt</span>' : st === "fertig" ? '<span class="chip ok">Abgeschlossen</span>' : st === "begonnen" ? '<span class="chip glow">Begonnen</span>' : '<span class="chip accent">Neu</span>') + "</span></button>";
   };
   KS.viewLibrary = function () {
     const W = (window.KS_WEEKS || []).slice().sort((a, b) => a.n - b.n); const lic = KS.licensed();

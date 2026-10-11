@@ -1,6 +1,6 @@
 # Klarsinn online stellen: Schritt für Schritt
 
-Diese Anleitung bringt Klarsinn als eigene Website mit eigener Domain, Google-Login und bezahltem Zugang ins Netz. Zeitaufwand: etwa 1 bis 2 Stunden.
+Diese Anleitung bringt Klarsinn als eigene, kostenlose Website mit eigener Domain, Google-Login und Unterstützungsmöglichkeiten ins Netz. Zeitaufwand: etwa 1 bis 2 Stunden.
 
 ---
 
@@ -43,40 +43,30 @@ Beispiel: `www.klarsinn.de` (Domain bei einem Anbieter wie IONOS, Strato, Namech
 6. **Projekteinstellungen (Zahnrad) → Allgemein → Meine Apps → Web-App hinzufügen (</>)**. Die angezeigten Werte `apiKey`, `authDomain`, `projectId`, `appId` in `js/config.js` bei `firebase:` eintragen.
 7. Optional: unter **Authentication → Settings → User actions** die Kontolöschung durch Nutzer zulassen.
 
-Danach erscheint oben rechts „Anmelden“. Mit `requireLogin: true` in `js/config.js` muss man sich vor dem Start anmelden. Fortschritt, Zertifikat und Zugang liegen dann im Konto und sind auf allen Geräten verfügbar.
+Danach erscheint oben rechts „Anmelden“. Die Anmeldung ist optional (`requireLogin: false` in `js/config.js`); mit `true` muss man sich vor dem Start anmelden. Mit Konto liegen Fortschritt und Zertifikat im Konto und sind auf allen Geräten verfügbar.
 
-**Gutscheine:** Neue Codes in `firestore.rules` (Liste `['JESUS']`) und in `js/shop.js` (Prüfsumme) ergänzen. Die Prüfung im Konto geschieht serverseitig durch die Sicherheitsregeln.
+## 4. Freiwillige Unterstützung einrichten (15 Minuten)
 
-## 4. Zahlungen mit Stripe (30 Minuten)
+Klarsinn ist kostenlos. Unter „Unterstützen“ können Menschen freiwillig etwas beitragen. Alle Wege werden oben in `js/support.js` bei `KS.SUPPORT` eingetragen; leere Felder werden nicht angezeigt.
 
-1. Konto bei <https://stripe.com> anlegen und verifizieren.
-2. **Produktkatalog**: drei Produkte anlegen
-   - Klarsinn 12 Wochen: 1.000 € einmalig
-   - Klarsinn 6 Monate: 150 € monatlich, nach 6 Zahlungen beenden (Abo mit Endtermin oder Ratenzahlung)
-   - Klarsinn 12 Monate: 70 € monatlich, nach 12 Zahlungen beenden
-3. Für jedes Produkt einen **Payment Link** erstellen. Unter „Nach der Zahlung“ die Weiterleitung auf `https://www.klarsinn.de/#start` setzen.
-4. Die drei Links in `js/shop.js` bei `paymentLinks` eintragen (`w12`, `m6`, `m12`).
-5. Automatische Freischaltung: Firebase auf den Tarif **Blaze** umstellen (Abrechnung nach Nutzung, für kleine Projekte meist wenige Cent), dann im Ordner `functions`:
-   ```bash
-   npm install -g firebase-tools
-   firebase login
-   firebase use <projekt-id>
-   firebase functions:secrets:set STRIPE_SECRET_KEY        # sk_live_…
-   firebase functions:secrets:set STRIPE_WEBHOOK_SECRET    # whsec_…
-   firebase deploy --only functions
-   ```
-6. In Stripe **Entwickler → Webhooks → Endpunkt hinzufügen**: die URL der Funktion `stripeWebhook` (wird beim Deploy angezeigt), Ereignis `checkout.session.completed`. Das Signing Secret als `STRIPE_WEBHOOK_SECRET` hinterlegen.
+| Weg | Einrichtung | Eintrag in `js/support.js` |
+|---|---|---|
+| PayPal | Auf <https://www.paypal.com/paypalme> einen PayPal.me-Link anlegen | `paypal: "https://paypal.me/deinname"` (Beträge 5/10/25/50 € werden automatisch angehängt) |
+| Karte, Apple Pay, Google Pay | Stripe-Konto, dann **Payment Link** mit Option „Kunden wählen den Betrag“ | `stripe: "https://buy.stripe.com/…"` |
+| Ko-fi | Profil auf <https://ko-fi.com> | `kofi: "https://ko-fi.com/deinname"` |
+| Monatlich | z. B. Steady, Patreon oder Stripe-Abo-Link | `monthly: "https://…"` |
+| Überweisung | Kontodaten | `bank: { owner, iban, bic, reference }` |
 
-Die Seite hängt beim Klick auf „Zahlungspflichtig bestellen“ automatisch die Nutzerkennung an den Link an. Nach der Zahlung schaltet der Webhook den Zugang im Konto frei.
+**Wichtig zum Wort „Spende“:** Steuerlich absetzbare Spenden (mit Zuwendungsbestätigung) kann nur ein gemeinnütziger Träger annehmen, z. B. ein eingetragener Verein oder eine gGmbH. Als Privatperson oder Unternehmen sind die Beiträge freiwillige Schenkungen, und Einnahmen können einkommen- bzw. umsatzsteuerlich relevant sein. Die Seite verwendet deshalb „Unterstützen“ und „freiwilliger Beitrag“. Bitte steuerlich beraten lassen; bei größerem Aufkommen lohnt sich die Gründung eines gemeinnützigen Vereins.
 
 ## 5. Rechtliches vor dem Start
 
-- `impressum.html`, `datenschutz.html`, `agb.html`: gelb markierte Platzhalter ausfüllen und rechtlich prüfen lassen.
+- `impressum.html`, `datenschutz.html`, `nutzungsbedingungen.html`: gelb markierte Platzhalter ausfüllen und rechtlich prüfen lassen.
 - Werbeaussagen auf Heilversprechen prüfen (Heilmittelwerbegesetz). Klarsinn ist als Selbsthilfe- und Bildungsangebot formuliert.
 - Die Inhalte (Zahlen in Lektionen) fachlich gegenlesen lassen.
-- Name für die Unterschrift im Zertifikat: `js/shop.js` → `issuer`.
+- Name für die Unterschrift im Zertifikat: `js/support.js` → `issuer`.
 
-## Was die Technik leistet und was nicht
+## Was die Technik leistet
 
-- Ohne Firebase läuft alles im Browser (localStorage); die Freischaltung lässt sich dann technisch umgehen.
-- Mit Firebase sind Konto, Zugang und Fortschritt serverseitig gesichert. Die Lerninhalte selbst liegen als öffentliche Dateien auf GitHub Pages und sind für Technikkundige grundsätzlich abrufbar. Für vollständigen Schutz der Inhalte bräuchte es Hosting mit serverseitiger Zugriffskontrolle (z. B. Firebase Hosting + Cloud Functions oder eine Kursplattform).
+- Ohne Firebase läuft alles im Browser (localStorage). Mit Firebase werden Fortschritt und Zertifikat im Konto gespeichert und synchronisiert; die Sicherheitsregeln sorgen dafür, dass jede Person nur ihre eigenen Daten sieht.
+- Da alles kostenlos ist, braucht es keinen Bezahlschutz und keine Server-Funktionen. Die Kosten bleiben minimal (Domain; Firebase im kostenlosen Spark-Tarif reicht für viele tausend Nutzerinnen und Nutzer).

@@ -15,6 +15,6 @@ window.KS_CONFIG = {
     appId: "1:123456789:web:abcdef"
   },
   */
-  requireLogin: true,   // true: Programmstart nur mit Google-Konto (empfohlen, sobald Firebase eingerichtet ist)
+  requireLogin: false,  // true: Programmstart nur mit Google-Konto; false: Login optional (Fortschritt sonst nur im Browser)
   firebaseVersion: "10.12.2"
 };

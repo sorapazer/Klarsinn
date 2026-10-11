@@ -1,13 +1,17 @@
 # Klarsinn – Programm für mentale Gesundheit (12 Wochen, 6 Monate, 12 Monate)
 
-Ein wissenschaftlich fundiertes, interaktives Selbsthilfeprogramm als Web-App. Reines HTML/CSS/JavaScript, ohne Server, Konto oder Tracking. Öffne `index.html` im Browser oder veröffentliche den Ordner über GitHub Pages.
+Ein wissenschaftlich fundiertes, interaktives Selbsthilfeprogramm als Web-App. Reines HTML/CSS/JavaScript, ohne eigenen Server, ohne Werbung oder Tracking, Google-Login optional. Öffne `index.html` im Browser oder veröffentliche den Ordner über GitHub Pages.
+
+## Kostenlos, mit freiwilliger Unterstützung
+
+Alle Inhalte (60 Lektionen, Werkzeuge, Prüfungen, Zertifikat) sind kostenlos, ohne Werbung und ohne Abo. Unter „Unterstützen“ (`#unterstuetzen`) können Nutzerinnen und Nutzer freiwillig beitragen: PayPal, Stripe, Ko-fi, monatlich oder per Überweisung. Die Links stehen in `js/support.js` (`KS.SUPPORT`). Dezente Hinweise erscheinen auf der Übersicht, nach abgeschlossenen Lektionen und beim Zertifikat.
 
 ## Akademie und Abschlusszertifikat
 
 - **Prüfungen:** 4 Phasenprüfungen (je 12 Fragen, ab 70 %) und eine Abschlussprüfung (30 Fragen, ab 80 %) aus einem Pool von über 200 Fragen; Prädikate: bestanden, gut, sehr gut, mit Auszeichnung.
 - **Fallstudien:** 12 interaktive Fälle mit je 4 Entscheidungen und fachlichem Feedback.
 - **Wiederholungstrainer:** Lernkarten im Leitner-System (Wiederholung nach 1, 2, 4, 8, 16 Tagen).
-- **Abschlusszertifikat (A4 quer):** Name, Programm, Zeitraum, Lernumfang in Unterrichtseinheiten, Prädikat, Zertifikatsnummer, Siegel; Download als PNG und Druck. Voraussetzungen: alle Grundlagen-Lektionen, Phasen- und Abschlussprüfung, 8 Fallstudien, Kompass-Plan, 75 % der Programmzeit (bei 6/12 Monaten zusätzlich Vertiefungen und Masterclasses). Name für die Unterschriftszeile in `js/shop.js` unter `issuer`.
+- **Abschlusszertifikat (A4 quer):** Name, Programm, Zeitraum, Lernumfang in Unterrichtseinheiten, Prädikat, Zertifikatsnummer, Siegel; Download als PNG und Druck. Voraussetzungen: alle Grundlagen-Lektionen, Phasen- und Abschlussprüfung, 8 Fallstudien, Kompass-Plan, 75 % der Programmzeit (bei 6/12 Monaten zusätzlich Vertiefungen und Masterclasses). Name für die Unterschriftszeile in `js/support.js` unter `issuer`.
 
 ## Programmvarianten
 
@@ -21,23 +25,9 @@ Die Variante wird beim Start gewählt und kann unter „Programm“ jederzeit ge
 
 ## Online stellen
 
-Komplette Anleitung in **[SETUP.md](SETUP.md)**: GitHub Pages, eigene Domain (DNS-Einträge), Google-Login über Firebase, Zahlungen über Stripe mit automatischer Freischaltung, Rechtstexte.
+Komplette Anleitung in **[SETUP.md](SETUP.md)**: GitHub Pages, eigene Domain (DNS-Einträge), Google-Login über Firebase, Unterstützungs-Links, Rechtstexte.
 
-Zusätzliche Dateien dafür: `js/config.js` (Firebase-Zugangsdaten, Login-Pflicht), `js/cloud.js` (Google-Login und Synchronisierung), `firestore.rules` (Sicherheitsregeln, serverseitige Gutscheinprüfung), `functions/` (Stripe-Webhook), `impressum.html`, `datenschutz.html`, `agb.html` (Vorlagen), `CNAME.example`, `fonts/` (selbst gehostete Schriften, keine Google-Fonts-Verbindung).
-
-## Preise und Freischaltung
-
-| Variante | Preis | ≈ pro Woche |
-|---|---|---|
-| 12 Wochen (Kompakt) | 1.000 € einmalig | 83 € |
-| 6 Monate (Vertiefung) | 6 × 150 € = 900 € | 35 € |
-| 12 Monate (Begleitung) | 12 × 70 € = 840 € | 16 € |
-
-Preise, Bezahl-Links und Gutscheine stehen oben in `js/shop.js` (`KS.SHOP`). Solange kein Bezahl-Link eingetragen ist, zeigt die Kaufseite einen Hinweis statt einer Zahlung. Gutscheine werden nur als Prüfsumme gespeichert; der Gutschein `JESUS` schaltet das Programm kostenlos frei.
-
-Kostenlos ohne Zugang: Startseite mit interaktiven Beispielen, Programmübersicht, Lektionsbibliothek (Vorschau), Modul 1 inklusive Probelektion, Quellen, Hilfe.
-
-**Wichtig:** Die Freischaltung läuft vollständig im Browser. Wer sich mit Entwicklerwerkzeugen auskennt, kann sie umgehen. Für einen echten Bezahlschutz braucht es einen Server mit Konten (z. B. ein Kursplattform-Anbieter oder Stripe + eigenes Backend). Vor dem Verkauf außerdem nötig: Impressum, AGB, Widerrufsbelehrung für digitale Inhalte, Datenschutzerklärung und eine Prüfung der Werbeaussagen (Heilmittelwerbegesetz).
+Zusätzliche Dateien dafür: `js/config.js` (Firebase-Zugangsdaten, Login optional), `js/cloud.js` (Google-Login und Synchronisierung), `firestore.rules` (Sicherheitsregeln), `impressum.html`, `datenschutz.html`, `nutzungsbedingungen.html` (Vorlagen), `CNAME.example`, `fonts/` (selbst gehostete Schriften, keine Google-Fonts-Verbindung).
 
 ## Inhalt
 
@@ -74,7 +64,7 @@ js/program.js         Varianten, Praxiswochen, Zeitachse, Aktivitätskalender
 js/explorables2.js    12 weitere interaktive Grafiken und Lernspiele
 js/master-*.js        36 Masterclass-Lektionen (Schema: docs/MASTER_SCHEMA.md)
 js/models.js          interaktive Modell-Diagramme, Lektionsbibliothek
-js/shop.js            Preise, Kauf, Gutscheine, Freischaltung
+js/support.js         kostenloser Start, Unterstützen-Seite, Hinweise
 js/academy.js         Prüfungen, Wiederholungstrainer, Fallstudien, Zertifikat
 js/cases-*.js         12 Fallstudien (Schema: docs/CASES_SCHEMA.md)
 js/tools.js           22 interaktive Werkzeuge
@@ -85,7 +75,7 @@ js/app.js             Seiten und Navigation
 
 ## Datenschutz
 
-Alle Eingaben bleiben im `localStorage` des Browsers. Unter „Meine Daten“ lassen sich Sicherungen exportieren und wiederherstellen.
+Ohne Anmeldung bleiben alle Eingaben im `localStorage` des Browsers; mit Google-Anmeldung zusätzlich im eigenen Firebase-Konto. Unter „Meine Daten“ lassen sich Sicherungen exportieren und wiederherstellen.
 
 ## Hinweis
 

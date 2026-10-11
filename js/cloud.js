@@ -47,19 +47,10 @@
     applying = true;
     if (remote && (!localHas || (remoteHas && (remote._ts || 0) > (local._ts || 0)))) KS.replaceData(remote);
     const p = KS.obj("profile");
-    if (d && d.license) p.license = Object.assign({ name: d.license.source === "voucher" ? "Freischaltung per Gutschein" : "Gekauft" }, d.license, { cloud: true });
-    else if (p.license && p.license.cloud) delete p.license;
     if (!p.name && cloud.user.name) p.name = cloud.user.name.split(" ")[0];
     KS.save(); applying = false;
     await push();
   }
-  cloud.redeem = async function (code, variant) {
-    if (!cloud.user) return false;
-    try {
-      await ref().set({ license: { source: "voucher", code: String(code).trim().toUpperCase(), variant: variant, at: new Date().toISOString() } }, { merge: true });
-      return true;
-    } catch (e) { console.error(e); return false; }
-  };
   cloud.login = async function () {
     try { await auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()); }
     catch (e) { if (e && e.code === "auth/popup-blocked") await auth.signInWithRedirect(new firebase.auth.GoogleAuthProvider()); else if (e && e.code !== "auth/popup-closed-by-user") KS.toast("Anmeldung fehlgeschlagen: " + (e.message || e.code)); }

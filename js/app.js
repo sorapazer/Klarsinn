@@ -77,7 +77,7 @@
   function dashBottom(w) {
     return '<div class="sec-h"><h2>Dein Weg</h2><a href="#programm">Programmübersicht</a></div>' + KS.timeline() + (KS.isLong() ? "" : "") + '<div style="margin-top:14px">' + route() + "</div>" +
       '<div class="grid2" style="margin-top:16px"><div class="panel stack"><div class="row" style="justify-content:space-between"><span class="lbl">Aktivitätskalender</span><span class="stat flame on">' + KS.flame + '<b class="num">' + KS.streak() + "</b></span></div>" + KS.heatmap(20) + '</div><div class="panel stack"><span class="lbl">Stimmung nach Wochentag</span>' + KS.weekdayBars() + "</div></div>" +
-      '<div class="sec-h"><h2>Werkzeuge für jetzt</h2><a href="#werkzeuge">Alle 22 Werkzeuge</a></div><div class="toolgrid">' + w.tools.map(toolCard).join("") + "</div>";
+      '<div class="sec-h"><h2>Werkzeuge für jetzt</h2><a href="#werkzeuge">Alle 22 Werkzeuge</a></div><div class="toolgrid">' + w.tools.map(toolCard).join("") + "</div>" + '<div style="margin-top:22px">' + KS.supportNudge() + "</div>";
   }
   function viewStartPW(k, e) {
     const p = profile(), c = KS.pwContent(e), s = KS.pst(k), prog = KS.pwProgress(e), w = W.find((x) => x.n === e.m), V = KS.VARIANTS[KS.variant()];
@@ -94,9 +94,9 @@
   function landing() {
     return '<section class="hero fade-in"><div><div class="eyebrow">Evidenzbasiertes Selbsthilfeprogramm</div><h1>Dein Programm für einen <em>klaren Kopf</em> und ein ruhigeres Herz.</h1>' +
       '<p class="lead">Klarsinn verbindet Methoden aus kognitiver Verhaltenstherapie, Akzeptanz- und Commitment-Therapie, Achtsamkeit und Positiver Psychologie zu einem strukturierten Programm. 60 interaktive Lektionen, 36 davon als Masterclass mit Theorie in der Tiefe, dazu angeleitete Übungen, konkrete Aufgaben und 22 Werkzeuge.</p>' +
-      '<div class="row"><a class="btn chunky big" href="#kaufen">Jetzt starten</a><a class="btn ghost" href="#lektionen">60 Lektionen ansehen</a></div></div>' +
-      '<div class="hero-card" id="los"><div class="eyebrow">Dein Start</div><h2 style="font-size:1.5rem;margin:6px 0 4px">Wähle deinen Weg</h2><p class="faint" style="margin:0 0 12px;font-size:.88rem">Je länger das Programm, desto günstiger jede Woche.</p>' + KS.priceCards("m6", true) + '<div class="row" style="margin-top:14px"><a class="btn chunky big" href="#kaufen">Jetzt starten</a><button type="button" class="btn ghost" data-lesson="1">Kostenlose Probelektion</button></div><p class="faint" style="font-size:.8rem;margin:10px 0 0">Gutscheincode? Einfach beim Start eingeben.</p></div></section>' +
-      '<div class="facts"><div><b>60</b><span>interaktive Lektionen, davon 36 Masterclasses</span></div><div><b>288</b><span>Wissenskapitel mit Studienbelegen</span></div><div><b>46</b><span>Werkzeuge, Grafiken und Lernspiele</span></div><div><b>' + Object.keys(R).length + '</b><span>wissenschaftliche Quellen</span></div></div>' +
+      '<div class="row"><a class="btn chunky big good" href="#los">Kostenlos starten</a><a class="btn ghost" href="#lektionen">60 Lektionen ansehen</a></div><p class="faint" style="font-size:.85rem;margin:12px 0 0">Vollständig kostenlos · ohne Werbung · ohne Abo · finanziert durch <a href="#unterstuetzen">freiwillige Unterstützung</a></p></div>' +
+      '<div class="hero-card"><div class="eyebrow">Dein Start</div><h2 style="font-size:1.5rem;margin:6px 0 4px">Wähle deinen Weg</h2><p class="faint" style="margin:0 0 12px;font-size:.88rem">Drei Varianten, gleicher Inhalt, unterschiedliches Tempo. Alle kostenlos.</p>' + KS.variantCards("m6", true) + '<div class="row" style="margin-top:14px"><a class="btn chunky big good" href="#los">Kostenlos starten</a><button type="button" class="btn ghost" data-lesson="1">Erste Lektion ansehen</button></div></div></section>' +
+      '<div class="facts"><div><b>0 €</b><span>für alle Inhalte, ohne Werbung und Abo</span></div><div><b>60</b><span>interaktive Lektionen, davon 36 Masterclasses</span></div><div><b>288</b><span>Wissenskapitel mit Studienbelegen</span></div><div><b>' + Object.keys(R).length + '</b><span>wissenschaftliche Quellen</span></div></div>' +
       '<div class="sec-h"><h2>Drei Wege, ein Ziel</h2><a href="#programm">Alle Inhalte</a></div><div class="variants">' + Object.entries(KS.VARIANTS).map(([k, v]) => '<div class="panel vcardx"><span class="vtag">' + v.tag + "</span><h3>" + v.name + '</h3><p class="muted">' + v.desc + '</p><div class="tl-mini" style="grid-template-columns:repeat(' + KS.plan(k).length + ',1fr)">' + KS.plan(k).map((e) => '<i style="background:' + (/integration|abschluss/.test(e.kind) ? "var(--glow)" : phc(e.phase)) + ";opacity:" + ({ lernen: 1, ueben: .7, vertiefen: .5, verankern: .35 }[e.kind] || 1) + '"></i>').join("") + '</div><span class="faint" style="font-size:.82rem">' + v.weeks + " Wochen · " + v.per + "</span></div>").join("") + "</div>" +
       '<div class="sec-h"><h2>Zwölf Themen in vier Phasen</h2></div>' + route() +
       '<div class="sec-h"><div><div class="eyebrow">Lernen durch Ausprobieren</div><h2>Probier es direkt aus</h2></div><span class="muted">Zwei von zwölf interaktiven Grafiken</span></div><div class="demo-grid"><div data-explore="2" style="--ph:var(--p1)"></div><div data-explore="7" style="--ph:var(--p3)"></div></div>' +
@@ -188,9 +188,9 @@
     const chip = app.querySelector(".whead .chip.glow"); if (chip) chip.textContent = Math.round(weekProgress(w) * 100) + " % erledigt";
   });
   document.addEventListener("click", (e) => { const b = e.target.closest("[data-go]"); if (b) location.hash = b.dataset.go; });
-  document.addEventListener("click", (e) => { const b = e.target.closest("[data-lesson]"); if (b) { e.preventDefault(); if (!KS.licensed() && (b.dataset.mode || b.dataset.lesson !== "1")) { location.hash = "#kaufen"; return; } KS.openLesson(Number(b.dataset.lesson), b.dataset.restart ? 0 : undefined, b.dataset.mode, b.dataset.key); } });
+  document.addEventListener("click", (e) => { const b = e.target.closest("[data-lesson]"); if (b) { e.preventDefault(); KS.openLesson(Number(b.dataset.lesson), b.dataset.restart ? 0 : undefined, b.dataset.mode, b.dataset.key); } });
   document.addEventListener("click", (e) => { const b = e.target.closest("[data-variant]"); if (!b) return; const g = b.closest(".vpick"); g.querySelectorAll(".vopt").forEach((x) => { x.classList.toggle("on", x === b); x.setAttribute("aria-checked", x === b); }); if (profile().start) { profile().variant = b.dataset.variant; KS.save(); KS.toast("Programm: " + KS.VARIANTS[b.dataset.variant].name); render(); } });
-  document.addEventListener("click", (e) => { const b = e.target.closest("[data-buy]"); if (b && !document.getElementById("buyForm")) location.hash = "#kaufen-" + b.dataset.buy; });
+  document.addEventListener("click", (e) => { const b = e.target.closest("[data-pick]"); if (b && !document.getElementById("buyForm")) location.hash = "#los-" + b.dataset.pick; });
   function lessonCTA(w) {
     const L = KS.obj("lessons")[w.n] || {}; const total = KS.buildCards(w).length; const pos = L.pos || 0;
     const label = L.done ? "Lektion wiederholen" : pos > 0 ? "Lektion fortsetzen" : "Lektion starten";
@@ -310,9 +310,7 @@
     cleanups.forEach((f) => { try { f(); } catch (e) { /* ignore */ } }); cleanups = [];
     pop.hidden = true;
     let h = (location.hash || "#start").slice(1);
-    if (h === "los") h = "kaufen";
-    const FREE = /^(start|kaufen(-\w+)?|hilfe|quellen|daten|lektionen|programm|woche-1|w1-\w+)$/;
-    if (!KS.licensed() && !FREE.test(h) && h !== "") { app.innerHTML = KS.paywall(); document.querySelectorAll(".nav a").forEach((a) => a.removeAttribute("aria-current")); window.scrollTo(0, 0); return; }
+    if (/^kaufen/.test(h)) h = h.replace("kaufen", "los");
     let m, html, after = null;
     const sub = h.match(/^w(\d+)-(\w+)$/);
     if (sub) { h = "woche-" + sub[1]; }
@@ -320,7 +318,8 @@
     else if (h === "programm") html = viewProgram();
     else if ((m = h.match(/^woche-(\d+)$/))) { html = viewWeek(Number(m[1])); after = () => bindWeek(Number(m[1])); }
     else if ((m = h.match(/^pw-(\d+)$/))) { const k = Number(m[1]), e = KS.plan()[k - 1]; if (e && e.kind === "lernen") { html = viewWeek(e.m); after = () => bindWeek(e.m); } else { html = KS.viewPW(k) || notFound(); after = () => KS.bindPW(k, mountTool); } }
-    else if ((m = h.match(/^kaufen(?:-(\w+))?$/))) { html = KS.viewCheckout(m[1]); after = KS.bindCheckout; }
+    else if ((m = h.match(/^los(?:-(\w+))?$/))) { html = KS.viewCheckout(m[1]); after = KS.bindCheckout; }
+    else if (h === "unterstuetzen") { html = KS.viewSupport(); after = KS.bindSupport; }
     else if (h === "lektionen") { html = KS.viewLibrary(); after = KS.bindLibrary; }
     else if (h === "akademie") html = KS.viewAcademy();
     else if ((m = h.match(/^pruefung-(\w+)$/))) { const k = m[1]; html = KS.viewExam(k) || notFound(); after = () => KS.bindExam(k); }
@@ -336,12 +335,11 @@
     else html = notFound();
     app.innerHTML = html; if (after) after();
     const top = h.split("-")[0];
-    const map = { start: "start", kaufen: "kaufen", lektionen: "lektionen", akademie: "akademie", pruefung: "akademie", trainer: "akademie", fall: "akademie", zertifikat: "akademie", programm: "programm", woche: "programm", pw: "programm", werkzeuge: "werkzeuge", tool: "werkzeuge", verlauf: "verlauf", quellen: "quellen" };
+    const map = { start: "start", los: "start", unterstuetzen: "unterstuetzen", lektionen: "lektionen", akademie: "akademie", pruefung: "akademie", trainer: "akademie", fall: "akademie", zertifikat: "akademie", programm: "programm", woche: "programm", pw: "programm", werkzeuge: "werkzeuge", tool: "werkzeuge", verlauf: "verlauf", quellen: "quellen" };
     document.querySelectorAll(".nav a").forEach((a) => a.toggleAttribute("aria-current", a.dataset.r === map[top]) || a.setAttribute("aria-current", "page"));
     document.querySelectorAll(".nav a").forEach((a) => { if (a.dataset.r === map[top]) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current"); });
     document.getElementById("nav").classList.remove("open");
     if (KS.renderAccount) KS.renderAccount();
-    document.querySelectorAll('.nav [data-r="kaufen"]').forEach((a) => (a.hidden = KS.licensed()));
     const wt = h.match(/^woche-(\d+)$/); const wk = wt && W.find((x) => x.n === Number(wt[1]));
     document.title = wk ? "Woche " + wk.n + ": " + wk.title + " · Klarsinn" : "Klarsinn";
     if (sub) { const t = document.getElementById("w" + sub[1] + "-" + sub[2]); if (t) setTimeout(() => t.scrollIntoView(), 30); } else window.scrollTo(0, 0);

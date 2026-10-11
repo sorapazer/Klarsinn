@@ -743,3 +743,24 @@ details.acc-menu > summary.acc-btn { padding: 0 6px; }
 .login-gate.ok { background: var(--ok-tint); }
 .login-gate .btn svg, .acc-btn svg { flex: none; }
 @media (max-width: 560px) { .acc-btn span { display: none; } }
+
+/* ===== Unterstützen ===== */
+.nav a.nav-heart { color: var(--p4); }
+.nav a.nav-heart[aria-current="page"] { background: var(--p4); color: #fff; }
+.support-hero { text-align: center; display: grid; justify-items: center; gap: 8px; padding: 26px 0 10px; max-width: 760px; margin: 0 auto; }
+.support-hero h2 { font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 800; letter-spacing: -.03em; }
+.support-hero .lead { font-family: var(--f-read); font-size: 1.12rem; color: var(--ink-soft); margin: 4px 0 0; }
+.sup-heart { width: 88px; height: 88px; border-radius: 26px; display: grid; place-items: center; background: var(--p4); color: #fff; box-shadow: 0 6px 0 color-mix(in srgb, var(--p4) 60%, #000); transform: rotate(-5deg); animation: bob 3.5s ease-in-out infinite; margin-bottom: 8px; }
+.support-why { margin-top: 18px; }
+.support-ways { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
+.support-ways .panel { border-width: 2px; border-radius: 18px; box-shadow: 0 4px 0 var(--line); }
+.amts { display: flex; flex-wrap: wrap; gap: 8px; }
+.amt { text-decoration: none; color: var(--ink); font-weight: 800; padding: 10px 16px; border-radius: 12px; border: 2px solid var(--line); background: var(--bg); box-shadow: 0 3px 0 var(--line); font-variant-numeric: tabular-nums; }
+.amt:hover { border-color: var(--p4); }
+.bank { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 4px 12px; margin: 0; font-size: .9rem; }
+.bank dt { color: var(--ink-faint); font-weight: 700; }
+.bank dd { margin: 0; overflow-wrap: anywhere; }
+.nudge { display: flex; gap: 12px; align-items: center; text-decoration: none; color: var(--ink-soft); background: color-mix(in srgb, var(--p4) 8%, var(--surface)); border: 1px solid color-mix(in srgb, var(--p4) 30%, var(--line)); border-radius: 14px; padding: 12px 16px; font-size: .9rem; text-align: left; }
+.nudge svg { color: var(--p4); flex: none; }
+.nudge:hover { border-color: var(--p4); color: var(--ink); }
+.ls-finish .nudge { max-width: 460px; margin: 6px auto; }
