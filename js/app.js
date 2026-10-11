@@ -35,9 +35,18 @@
   }
 
   /* ---------- Startseite / Dashboard ---------- */
-  function viewStart() {
+  function ensureStarted() {
     const p = profile();
-    if (!p.start || !KS.licensed()) return landing();
+    if (!p.start) { p.start = KS.today(); p.variant = p.variant || "w12"; KS.save(); }
+  }
+  function welcome() {
+    if (profile().welcomed) return "";
+    return '<div class="welcome fade-in"><div class="welcome-ic">' + KS.weekIcon(1, 34) + '</div><div style="min-width:0;flex:1"><h2>Willkommen bei Klarsinn</h2><p>Ein wissenschaftlich fundiertes Programm für mentale Gesundheit: 60 interaktive Lektionen, Übungen, Werkzeuge und ein Abschlusszertifikat. Starte einfach mit der ersten Lektion. Wenn du mehr Zeit möchtest, stelle unter <a href="#programm">Programm</a> 6 oder 12 Monate ein.</p><p class="faint" style="font-size:.85rem">Klarsinn ist ein Selbsthilfeprogramm und ersetzt keine Diagnose oder Psychotherapie. In einer Krise findest du Hilfe unter <a href="#hilfe">Hilfe in der Krise</a>.</p></div><button type="button" class="iconbtn" data-welcome aria-label="Hinweis schließen">✕</button></div>';
+  }
+  document.addEventListener("click", (e) => { if (e.target.closest("[data-welcome]")) { profile().welcomed = 1; KS.save(); const w = document.querySelector(".welcome"); if (w) w.remove(); } });
+  function viewStart() {
+    ensureStarted();
+    const p = profile();
     const cpw = KS.currentPW(), ce = KS.plan()[cpw - 1];
     if (ce && ce.kind !== "lernen") return viewStartPW(cpw, ce);
     const cur = KS.currentWeek(); const w = W.find((x) => x.n === cur) || W[0]; const s = wstate(w.n);
@@ -50,7 +59,7 @@
     const doneTasks = Object.values(KS.obj("weeks")).reduce((a, ws) => a + Object.values(ws.t || {}).reduce((b, arr) => b + arr.filter(Boolean).length, 0), 0);
     const hr = new Date().getHours(); const hello = hr < 11 ? "Guten Morgen" : hr < 18 ? "Hallo" : "Guten Abend";
     const series = [{ color: "var(--accent)", area: true, values: ci.map((c) => ({ x: c.d, y: c.mood })) }];
-    return '<div class="dash fade-in"><section class="panel now" style="--ph:' + phc(w.phase) + '"><div class="eyebrow">' + hello + (p.name ? ", " + esc(p.name) : "") + " · " + (KS.isLong() ? "Programmwoche " + KS.currentPW() + " von " + KS.VARIANTS[KS.variant()].weeks + " · Lernen" : "Tag " + (dayIdx + 1) + " von Woche " + w.n) + '</div>' +
+    return welcome() + '<div class="dash fade-in"><section class="panel now" style="--ph:' + phc(w.phase) + '"><div class="eyebrow">' + hello + (p.name ? ", " + esc(p.name) : "") + " · " + (KS.isLong() ? "Programmwoche " + KS.currentPW() + " von " + KS.VARIANTS[KS.variant()].weeks + " · Lernen" : "Tag " + (dayIdx + 1) + " von Woche " + w.n) + '</div>' +
       '<div class="row" style="flex-wrap:nowrap;align-items:center;gap:18px">' + KS.ring(prog, "Woche " + w.n) + '<div style="min-width:0"><span class="chip" style="color:' + phc(w.phase) + '">Phase ' + w.phase + " · " + PH[w.phase][0] + '</span><h2 style="margin-top:8px">' + esc(w.title) + '</h2><p class="muted" style="margin:6px 0 0;font-family:var(--f-read)">' + esc(w.subtitle) + "</p></div></div>" +
       lessonCTA(w) + '<div class="row"><a class="btn ghost" href="#woche-' + w.n + '">Wochenseite öffnen</a><a class="btn ghost" href="#programm">Alle Wochen</a></div>' +
       '<hr class="soft"><div class="lbl">Heute dran</div><ul class="todo">' +
@@ -84,28 +93,13 @@
     const dayIdx = Math.min(6, KS.daysBetween(p.start, KS.today()) % 7);
     const daily = c.tasks.map((t, i) => [t, i]).filter(([t]) => /täglich/.test(t.freq));
     const hr = new Date().getHours(); const hello = hr < 11 ? "Guten Morgen" : hr < 18 ? "Hallo" : "Guten Abend";
-    return '<div class="dash fade-in"><section class="panel now" style="--ph:' + phc(e.phase || 4) + '"><div class="eyebrow">' + hello + (p.name ? ", " + esc(p.name) : "") + " · Programmwoche " + k + " von " + V.weeks + '</div><div class="row" style="flex-wrap:nowrap;align-items:center;gap:18px">' + KS.ring(prog, KS.KIND[e.kind]) + '<div style="min-width:0"><span class="chip" style="color:' + phc(e.phase || 4) + '">' + V.name + " · " + KS.KIND[e.kind] + '</span><h2 style="margin-top:8px">' + esc(c.title) + '</h2><p class="muted" style="margin:6px 0 0;font-family:var(--f-read)">' + esc(c.focus) + '</p></div></div><div class="row"><a class="btn chunky big" href="#pw-' + k + '">Zur Praxiswoche</a><a class="btn ghost" href="#woche-' + e.m + '">Modul ' + e.m + " ansehen</a></div>" +
+    return welcome() + '<div class="dash fade-in"><section class="panel now" style="--ph:' + phc(e.phase || 4) + '"><div class="eyebrow">' + hello + (p.name ? ", " + esc(p.name) : "") + " · Programmwoche " + k + " von " + V.weeks + '</div><div class="row" style="flex-wrap:nowrap;align-items:center;gap:18px">' + KS.ring(prog, KS.KIND[e.kind]) + '<div style="min-width:0"><span class="chip" style="color:' + phc(e.phase || 4) + '">' + V.name + " · " + KS.KIND[e.kind] + '</span><h2 style="margin-top:8px">' + esc(c.title) + '</h2><p class="muted" style="margin:6px 0 0;font-family:var(--f-read)">' + esc(c.focus) + '</p></div></div><div class="row"><a class="btn chunky big" href="#pw-' + k + '">Zur Praxiswoche</a><a class="btn ghost" href="#woche-' + e.m + '">Modul ' + e.m + " ansehen</a></div>" +
       '<hr class="soft"><div class="lbl">Heute dran</div><ul class="todo">' + (daily.length ? daily.map(([t, i]) => { const on = !!(s.t[i] || [])[dayIdx]; return '<li><button type="button" class="box' + (on ? " on" : "") + '" data-ptick="' + k + ":" + i + ":" + dayIdx + '" aria-pressed="' + on + '" aria-label="' + esc(t.title) + '">' + (on ? KS.check : "") + "</button><span><b>" + esc(t.title) + '</b><br><span class="faint" style="font-size:.86rem">' + esc(t.desc) + "</span></span></li>"; }).join("") : '<li><span class="muted">Diese Woche gibt es keine täglichen Aufgaben. Schau in die <a href="#pw-' + k + '">Wochenaufgaben</a>.</span></li>') + "</ul></section>" + sidePanels() + "</div>" + dashBottom({ tools: c.tools });
   }
   function levelCard() {
     const x = KS.xp(), lv = KS.level(x), st = KS.streak();
     return '<div class="panel level"><div class="lv-badge num">' + lv.n + '</div><div style="min-width:0;flex:1"><div class="row" style="justify-content:space-between"><b>Level ' + lv.n + " · " + lv.name + '</b><span class="stat xpc">' + KS.bolt + '<b class="num">' + x + ' XP</b></span></div><div class="bar" style="height:10px;margin:8px 0 6px"><i style="width:' + Math.round(lv.pct * 100) + '%"></i></div><span class="faint" style="font-size:.82rem">Noch ' + lv.toNext + " XP bis Level " + (lv.n + 1) + ' · <span class="stat flame' + (st ? " on" : "") + '" style="padding:0 4px">' + KS.flame + '<b class="num">' + st + "</b></span> " + (st === 1 ? "Tag" : "Tage") + " in Folge aktiv</span></div></div>";
   }
-  function landing() {
-    return '<section class="hero fade-in"><div><div class="eyebrow">Evidenzbasiertes Selbsthilfeprogramm</div><h1>Dein Programm für einen <em>klaren Kopf</em> und ein ruhigeres Herz.</h1>' +
-      '<p class="lead">Klarsinn verbindet Methoden aus kognitiver Verhaltenstherapie, Akzeptanz- und Commitment-Therapie, Achtsamkeit und Positiver Psychologie zu einem strukturierten Programm. 60 interaktive Lektionen, 36 davon als Masterclass mit Theorie in der Tiefe, dazu angeleitete Übungen, konkrete Aufgaben und 22 Werkzeuge.</p>' +
-      '<div class="row"><a class="btn chunky big good" href="#los">Kostenlos starten</a><a class="btn ghost" href="#lektionen">60 Lektionen ansehen</a></div><p class="faint" style="font-size:.85rem;margin:12px 0 0">Vollständig kostenlos · ohne Werbung · ohne Abo · finanziert durch <a href="#unterstuetzen">freiwillige Unterstützung</a></p></div>' +
-      '<div class="hero-card"><div class="eyebrow">Dein Start</div><h2 style="font-size:1.5rem;margin:6px 0 4px">Wähle deinen Weg</h2><p class="faint" style="margin:0 0 12px;font-size:.88rem">Drei Varianten, gleicher Inhalt, unterschiedliches Tempo. Alle kostenlos.</p>' + KS.variantCards("m6", true) + '<div class="row" style="margin-top:14px"><a class="btn chunky big good" href="#los">Kostenlos starten</a><button type="button" class="btn ghost" data-lesson="1">Erste Lektion ansehen</button></div></div></section>' +
-      '<div class="facts"><div><b>0 €</b><span>für alle Inhalte, ohne Werbung und Abo</span></div><div><b>60</b><span>interaktive Lektionen, davon 36 Masterclasses</span></div><div><b>288</b><span>Wissenskapitel mit Studienbelegen</span></div><div><b>' + Object.keys(R).length + '</b><span>wissenschaftliche Quellen</span></div></div>' +
-      '<div class="sec-h"><h2>Drei Wege, ein Ziel</h2><a href="#programm">Alle Inhalte</a></div><div class="variants">' + Object.entries(KS.VARIANTS).map(([k, v]) => '<div class="panel vcardx"><span class="vtag">' + v.tag + "</span><h3>" + v.name + '</h3><p class="muted">' + v.desc + '</p><div class="tl-mini" style="grid-template-columns:repeat(' + KS.plan(k).length + ',1fr)">' + KS.plan(k).map((e) => '<i style="background:' + (/integration|abschluss/.test(e.kind) ? "var(--glow)" : phc(e.phase)) + ";opacity:" + ({ lernen: 1, ueben: .7, vertiefen: .5, verankern: .35 }[e.kind] || 1) + '"></i>').join("") + '</div><span class="faint" style="font-size:.82rem">' + v.weeks + " Wochen · " + v.per + "</span></div>").join("") + "</div>" +
-      '<div class="sec-h"><h2>Zwölf Themen in vier Phasen</h2></div>' + route() +
-      '<div class="sec-h"><div><div class="eyebrow">Lernen durch Ausprobieren</div><h2>Probier es direkt aus</h2></div><span class="muted">Zwei von zwölf interaktiven Grafiken</span></div><div class="demo-grid"><div data-explore="2" style="--ph:var(--p1)"></div><div data-explore="7" style="--ph:var(--p3)"></div></div>' +
-      '<div class="sec-h"><h2>So funktioniert jede Woche</h2></div><div class="method">' +
-      [["Lektion", "Eine interaktive Lektion, Karte für Karte: Wissen mit Studienbelegen, Grafiken zum Ausprobieren und Fragen mit sofortigem Feedback."], ["Üben", "Eine angeleitete Übung und interaktive Werkzeuge: Atem-Taktgeber, Gedankenprotokoll, Schlaftagebuch und mehr."], ["Umsetzen", "Sechs bis sieben konkrete Aufgaben für den Alltag. Du hakst ab und siehst deinen Fortschritt."], ["Reflektieren", "Reflexionsfragen und ein kurzes Quiz festigen das Gelernte. Alles bleibt in deinem Tagebuch."]].map(([t, d], i) => '<div class="panel"><span class="chip accent num">Schritt ' + (i + 1) + "</span><h3>" + t + "</h3><p>" + d + "</p></div>").join("") + "</div>" +
-      '<div class="sec-h"><h2>Worauf das Programm aufbaut</h2></div><div class="grid2"><div class="reading"><p>Strukturierte Selbsthilfe nach kognitiv-verhaltenstherapeutischen Prinzipien kann bei leichten bis mittleren Belastungen deutlich entlasten, besonders wenn sie regelmäßig genutzt wird ' + KS.cite("[[cuijpers2010]][[karyotaki2021]]") + '. Klarsinn bündelt Methoden mit guter Studienlage: Psychoedukation, Verhaltensaktivierung, kognitive Umstrukturierung, Achtsamkeit, Akzeptanz, Selbstmitgefühl und Rückfallprophylaxe.</p><p>Gemessen wird dein Verlauf mit dem WHO-5-Wohlbefindens-Index, einem der weltweit am häufigsten eingesetzten Kurzfragebögen ' + KS.cite("[[topp2015]]") + ', zu Beginn, zur Halbzeit und am Ende.</p></div>' +
-      '<div class="note warn" style="align-self:start"><b>Wichtig:</b> Klarsinn ersetzt keine ärztliche oder psychotherapeutische Behandlung. Wenn du seit mehr als zwei Wochen kaum Freude empfindest, stark erschöpft bist, nicht mehr schlafen kannst oder an Suizid denkst, wende dich bitte an deine Hausarztpraxis, die 116 117 oder in akuten Krisen an die TelefonSeelsorge (0800 111 0 111) oder den Notruf 112. <a href="#hilfe">Alle Hilfsangebote</a></div></div>';
-  }
-
   function toolCard(id) {
     const t = KS.tools[id]; if (!t) return "";
     return '<a class="tcard" href="#tool-' + id + '"><em>' + esc(t.cat) + "</em><b>" + esc(t.name) + "</b><span>" + t.desc + "</span></a>";
@@ -190,7 +184,6 @@
   document.addEventListener("click", (e) => { const b = e.target.closest("[data-go]"); if (b) location.hash = b.dataset.go; });
   document.addEventListener("click", (e) => { const b = e.target.closest("[data-lesson]"); if (b) { e.preventDefault(); KS.openLesson(Number(b.dataset.lesson), b.dataset.restart ? 0 : undefined, b.dataset.mode, b.dataset.key); } });
   document.addEventListener("click", (e) => { const b = e.target.closest("[data-variant]"); if (!b) return; const g = b.closest(".vpick"); g.querySelectorAll(".vopt").forEach((x) => { x.classList.toggle("on", x === b); x.setAttribute("aria-checked", x === b); }); if (profile().start) { profile().variant = b.dataset.variant; KS.save(); KS.toast("Programm: " + KS.VARIANTS[b.dataset.variant].name); render(); } });
-  document.addEventListener("click", (e) => { const b = e.target.closest("[data-pick]"); if (b && !document.getElementById("buyForm")) location.hash = "#los-" + b.dataset.pick; });
   function lessonCTA(w) {
     const L = KS.obj("lessons")[w.n] || {}; const total = KS.buildCards(w).length; const pos = L.pos || 0;
     const label = L.done ? "Lektion wiederholen" : pos > 0 ? "Lektion fortsetzen" : "Lektion starten";
@@ -310,15 +303,15 @@
     cleanups.forEach((f) => { try { f(); } catch (e) { /* ignore */ } }); cleanups = [];
     pop.hidden = true;
     let h = (location.hash || "#start").slice(1);
-    if (/^kaufen/.test(h)) h = h.replace("kaufen", "los");
+    ensureStarted();
+    if (/^(kaufen|los)/.test(h)) h = "programm";
     let m, html, after = null;
     const sub = h.match(/^w(\d+)-(\w+)$/);
     if (sub) { h = "woche-" + sub[1]; }
-    if (h === "start" || h === "") { html = viewStart(); after = profile().start && KS.licensed() ? () => app.querySelectorAll("[data-tool]").forEach((el) => mountTool(el, el.dataset.tool)) : bindLanding; }
+    if (h === "start" || h === "") { html = viewStart(); after = () => app.querySelectorAll("[data-tool]").forEach((el) => mountTool(el, el.dataset.tool)); }
     else if (h === "programm") html = viewProgram();
     else if ((m = h.match(/^woche-(\d+)$/))) { html = viewWeek(Number(m[1])); after = () => bindWeek(Number(m[1])); }
     else if ((m = h.match(/^pw-(\d+)$/))) { const k = Number(m[1]), e = KS.plan()[k - 1]; if (e && e.kind === "lernen") { html = viewWeek(e.m); after = () => bindWeek(e.m); } else { html = KS.viewPW(k) || notFound(); after = () => KS.bindPW(k, mountTool); } }
-    else if ((m = h.match(/^los(?:-(\w+))?$/))) { html = KS.viewCheckout(m[1]); after = KS.bindCheckout; }
     else if (h === "unterstuetzen") { html = KS.viewSupport(); after = KS.bindSupport; }
     else if (h === "lektionen") { html = KS.viewLibrary(); after = KS.bindLibrary; }
     else if (h === "akademie") html = KS.viewAcademy();
@@ -344,9 +337,7 @@
     document.title = wk ? "Woche " + wk.n + ": " + wk.title + " · Klarsinn" : "Klarsinn";
     if (sub) { const t = document.getElementById("w" + sub[1] + "-" + sub[2]); if (t) setTimeout(() => t.scrollIntoView(), 30); } else window.scrollTo(0, 0);
   }
-  function bindLanding() {
-    app.querySelectorAll("[data-explore]").forEach((el) => KS.mountExplorable(el, Number(el.dataset.explore)));
-  }
+
   addEventListener("hashchange", render);
   KS.rerender = render;
 

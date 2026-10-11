@@ -764,3 +764,8 @@ details.acc-menu > summary.acc-btn { padding: 0 6px; }
 .nudge svg { color: var(--p4); flex: none; }
 .nudge:hover { border-color: var(--p4); color: var(--ink); }
 .ls-finish .nudge { max-width: 460px; margin: 6px auto; }
+.welcome { display: flex; gap: 18px; align-items: flex-start; background: var(--surface); border: 2px solid var(--accent); border-radius: 20px; padding: 20px 22px; margin-bottom: 18px; box-shadow: 0 4px 0 var(--accent-tint); }
+.welcome h2 { font-size: clamp(1.4rem, 3vw, 1.9rem); font-weight: 800; margin-bottom: 6px; }
+.welcome p { margin: 0 0 6px; font-family: var(--f-read); color: var(--ink-soft); max-width: 75ch; }
+.welcome-ic { width: 60px; height: 60px; flex: none; border-radius: 18px; display: grid; place-items: center; background: var(--accent); color: var(--surface); transform: rotate(-4deg); }
+@media (max-width: 560px) { .welcome-ic { display: none; } }

@@ -4,7 +4,7 @@ Ein wissenschaftlich fundiertes, interaktives Selbsthilfeprogramm als Web-App. R
 
 ## Kostenlos, mit freiwilliger Unterstützung
 
-Alle Inhalte (60 Lektionen, Werkzeuge, Prüfungen, Zertifikat) sind kostenlos, ohne Werbung und ohne Abo. Unter „Unterstützen“ (`#unterstuetzen`) können Nutzerinnen und Nutzer freiwillig beitragen: PayPal, Stripe, Ko-fi, monatlich oder per Überweisung. Die Links stehen in `js/support.js` (`KS.SUPPORT`). Dezente Hinweise erscheinen auf der Übersicht, nach abgeschlossenen Lektionen und beim Zertifikat.
+Alle Inhalte (60 Lektionen, Werkzeuge, Prüfungen, Zertifikat) sind kostenlos, ohne Werbung und ohne Abo. Es gibt keine Startseite mit Auswahl: Beim ersten Besuch startet der Kurs sofort (12 Wochen, änderbar unter „Programm“). Unter „Unterstützen“ (`#unterstuetzen`) können Nutzerinnen und Nutzer freiwillig beitragen: PayPal, Stripe, Ko-fi, monatlich oder per Überweisung. Die Links stehen in `js/support.js` (`KS.SUPPORT`). Dezente Hinweise erscheinen auf der Übersicht, nach abgeschlossenen Lektionen und beim Zertifikat.
 
 ## Akademie und Abschlusszertifikat
 

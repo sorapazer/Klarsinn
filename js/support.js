@@ -22,55 +22,6 @@
   const heart = '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.5-7 10-7 10z" fill="currentColor"/></svg>';
   KS.heart = heart;
 
-  KS.FEATURES = {
-    w12: ["12 Themen in 12 Wochen", "24 Lektionen mit Theorie und Praxis", "Täglich etwa 20 bis 30 Minuten", "Für einen konzentrierten Neustart"],
-    m6: ["12 Themen in 26 Wochen", "60 Lektionen inklusive Masterclasses", "Lern- und Übungswochen im Wechsel", "Rückblick- und Abschlusswoche"],
-    m12: ["Ein Thema pro Monat, 52 Wochen", "60 Lektionen, 36 Masterclasses", "Lernen, Üben, Vertiefen, Verankern", "4 Integrationswochen, Begleitung über ein Jahr"]
-  };
-
-  /* Variantenkarten (ohne Preise) */
-  KS.variantCards = function (sel, compact) {
-    return '<div class="prices' + (compact ? " compact" : "") + '" role="radiogroup" aria-label="Programmlänge wählen">' + Object.entries(KS.VARIANTS).map(([k, v]) =>
-      '<button type="button" role="radio" aria-checked="' + (k === sel) + '" class="price' + (k === sel ? " on" : "") + '" data-pick="' + k + '">' + (k === "m6" ? '<span class="price-badge mid">Empfohlen</span>' : k === "m12" ? '<span class="price-badge">Am nachhaltigsten</span>' : '<span class="price-badge alt">Intensiv</span>') +
-      '<span class="vtag">' + v.tag + '</span><b class="price-name">' + v.name + '</b><span class="price-amt num">0 €</span><span class="price-sub">' + v.per + " · kostenlos</span>" +
-      (compact ? "" : '<ul class="price-feat">' + KS.FEATURES[k].map((f) => "<li>" + esc(f) + "</li>").join("") + "</ul>") + "</button>").join("") + "</div>";
-  };
-  KS.priceCards = KS.variantCards;
-
-  /* Startseite (früher Kauf) */
-  KS.viewCheckout = function (pre) {
-    const p = KS.obj("profile"); const sel = pre || p.variant || "m6";
-    const C = window.KS_CONFIG || {};
-    const loginGate = KS.cloud && KS.cloud.enabled && !KS.cloud.user;
-    return '<section class="checkout fade-in"><div class="sec-h" style="margin-top:6px"><div><div class="eyebrow">Kostenlos starten</div><h2 style="font-size:clamp(1.9rem,4vw,2.8rem)">' + (p.start ? "Programm anpassen" : "Wähle deinen Weg") + '</h2></div><span class="muted">Alle Inhalte sind vollständig kostenlos. Ohne Abo, ohne Werbung.</span></div>' +
-      KS.variantCards(sel) +
-      '<form class="panel stack checkout-form" id="buyForm" style="margin-top:18px"><div class="grid2"><div class="field"><label for="by-name">Wie dürfen wir dich nennen? <span class="faint">(optional)</span></label><input type="text" id="by-name" autocomplete="given-name" value="' + esc(p.name || "") + '"></div><div class="field"><label for="by-date">Startdatum</label><input type="date" id="by-date" value="' + esc(p.start || KS.today()) + '"></div></div>' +
-      (loginGate ? '<div class="login-gate"><div><b>Mit Google-Konto speichern' + (C.requireLogin ? "" : " (optional)") + '</b><p class="faint" style="margin:2px 0 0;font-size:.85rem">Dann sind Fortschritt und Zertifikat auf allen Geräten verfügbar. Ohne Konto bleibt alles nur in diesem Browser.</p></div><button type="button" class="btn ghost" data-login>' + (KS.googleIcon || "") + " Mit Google anmelden</button></div>" : KS.cloud && KS.cloud.user ? '<div class="login-gate ok"><span>' + (KS.googleIcon || "") + " Angemeldet als <b>" + esc(KS.cloud.user.email || "") + "</b></span></div>" : "") +
-      '<label class="row" style="gap:8px;font-size:.88rem;align-items:flex-start;flex-wrap:nowrap"><input type="checkbox" id="by-ok" style="margin-top:4px"> <span>Ich habe verstanden, dass Klarsinn ein Selbsthilfeprogramm ist und keine Diagnose oder Psychotherapie ersetzt. In einer Krise nutze ich die <a href="#hilfe">Notfallnummern</a>. Es gelten die <a href="nutzungsbedingungen.html" target="_blank">Nutzungsbedingungen</a>.</span></label>' +
-      (KS.cloud && KS.cloud.user ? '<label class="row" style="gap:8px;font-size:.85rem;align-items:flex-start;flex-wrap:nowrap"><input type="checkbox" id="by-art9" style="margin-top:4px"> <span>Ich willige ein, dass meine Eingaben im Programm (z. B. Stimmung, Schlaf, Tagebuch), die Gesundheitsdaten enthalten können, in meinem Konto gespeichert werden (Art. 9 Abs. 2 lit. a DSGVO). Widerruf jederzeit unter „Meine Daten“. <a href="datenschutz.html" target="_blank">Datenschutz</a></span></label>' : "") +
-      '<div class="row checkout-sum"><div><span class="faint" style="font-size:.85rem">Gewählt: <b data-sumname></b></span><div class="price-total num">0 €</div></div><button class="btn chunky big good" type="submit">' + (p.start ? "Änderungen speichern" : "Kostenlos starten") + '</button></div><div data-msg></div></form>' +
-      '<p class="faint" style="font-size:.85rem;margin-top:12px">' + heart.replace("<svg", '<svg style="vertical-align:-3px;color:var(--p4)"') + ' Klarsinn finanziert sich über freiwillige Unterstützung. <a href="#unterstuetzen">Mehr erfahren</a></p></section>';
-  };
-  KS.bindCheckout = function () {
-    const f = document.getElementById("buyForm"); if (!f) return;
-    let sel = (document.querySelector("[data-pick].on") || { dataset: { pick: "m6" } }).dataset.pick;
-    const upd = () => (f.querySelector("[data-sumname]").textContent = KS.VARIANTS[sel].name + " · " + KS.VARIANTS[sel].tag);
-    document.querySelectorAll("[data-pick]").forEach((b) => (b.onclick = () => { sel = b.dataset.pick; document.querySelectorAll("[data-pick]").forEach((x) => { x.classList.toggle("on", x === b); x.setAttribute("aria-checked", x === b); }); upd(); }));
-    upd();
-    f.onsubmit = (e) => {
-      e.preventDefault();
-      const msg = f.querySelector("[data-msg]"), C = window.KS_CONFIG || {};
-      if (!f.querySelector("#by-ok").checked) { KS.toast("Bitte bestätige den Hinweis"); return; }
-      if (KS.cloud && KS.cloud.enabled && C.requireLogin && !KS.cloud.user) { msg.innerHTML = '<div class="note">Bitte melde dich zuerst mit deinem Google-Konto an.</div>'; return; }
-      const a9 = f.querySelector("#by-art9"); if (a9 && !a9.checked) { KS.toast("Bitte bestätige die Einwilligung zur Speicherung"); return; }
-      const p = KS.obj("profile"), first = !p.start;
-      p.name = f.querySelector("#by-name").value.trim(); p.start = f.querySelector("#by-date").value || KS.today(); p.variant = sel;
-      if (a9) p.consentArt9 = new Date().toISOString();
-      KS.save();
-      if (first) { KS.confetti(); KS.toast("Willkommen bei Klarsinn!"); location.hash = "#woche-1"; } else { KS.toast("Gespeichert"); location.hash = "#start"; }
-    };
-  };
-
   /* Unterstützen-Seite */
   KS.viewSupport = function () {
     const S = KS.SUPPORT, b = S.bank || {};
