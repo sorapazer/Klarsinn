@@ -1,0 +1,21 @@
+rules_version = '2';
+// Klarsinn – Firestore-Sicherheitsregeln
+// Jede Person darf nur ihr eigenes Dokument lesen und schreiben.
+// Eine Freischaltung („license“) darf vom Browser aus NUR mit einem gültigen Gutscheincode gesetzt werden.
+// Gekaufte Zugänge setzt ausschließlich die Cloud Function (Stripe-Webhook) mit Admin-Rechten.
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{uid} {
+      function isOwner() { return request.auth != null && request.auth.uid == uid; }
+      function oldLicense() { return resource == null ? null : resource.data.get('license', null); }
+      function newLicense() { return request.resource.data.get('license', null); }
+      // Gültige Gutscheincodes (Großbuchstaben). Neue Codes hier ergänzen.
+      function validVoucher() { return newLicense() != null && newLicense().source == 'voucher' && newLicense().code in ['JESUS']; }
+      allow read: if isOwner();
+      allow create, update: if isOwner()
+        && request.resource.size() < 900000
+        && (newLicense() == oldLicense() || validVoucher());
+      allow delete: if isOwner();
+    }
+  }
+}
